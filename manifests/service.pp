@@ -136,12 +136,12 @@ class docker::service (
 
     file { '/etc/docker/docker.pem':
       ensure => present,
-      source => 'puppet:///modules/docker/ssl/${::fqdn}.pem',
+      source => "puppet:///modules/docker/ssl/${::fqdn}.pem",
     }
 
     file { '/etc/docker/docker-key.pem':
       ensure => present,
-      source => 'puppet:///modules/docker/ssl/${::fqdn}-key.pem',
+      source => "puppet:///modules/docker/ssl/${::fqdn}-key.pem",
     }
   }
 
