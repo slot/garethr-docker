@@ -42,6 +42,7 @@ class docker::service (
   $storage_driver   = $docker::storage_driver,
   $tmp_dir          = $docker::tmp_dir,
   $nowarn_kernel    = $docker::nowarn_kernel,
+  $tlsverify        = $docker::tlsverify,
 ) {
   $dns_array = any2array($dns)
   $dns_search_array = any2array($dns_search)
@@ -125,6 +126,23 @@ class docker::service (
   $provider = $::operatingsystem ? {
     'Ubuntu' => 'upstart',
     default  => undef,
+  }
+
+  if $tlsverify != nil {
+    file { '/etc/docker/ca.pem':
+      ensure => present,
+      source => 'puppet:///modules/docker/ssl/ca.pem',
+    }
+
+    file { '/etc/docker/docker.pem':
+      ensure => present,
+      source => 'puppet:///modules/docker/ssl/${::fqdn}.pem',
+    }
+
+    file { '/etc/docker/docker-key.pem':
+      ensure => present,
+      source => 'puppet:///modules/docker/ssl/${::fqdn}-key.pem',
+    }
   }
 
   service { 'docker':
